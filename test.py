@@ -16,3 +16,4 @@ def parseCommand(command):
             command_dict[opt] = command_dict.get(opt, '') + i
     return command_dict
 print(parseCommand('足球 sport:足球'))
+print('test modification')
