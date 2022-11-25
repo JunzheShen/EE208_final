@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>体育新闻搜索引擎</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <script src="/static/js/59ec0a646c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/css/bootstrap-multiselect.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+
+<div class="container">
+    <style>
+
+        /* 状态一: 未被访问过的链接 */
+        a {
+            text-decoration: none;
+            color: rgb(14, 23, 193);
+        }
+
+        /* 状态三: 鼠标划过(停留)的链接(默认红色) */
+        a:hover {
+            text-decoration: none;
+            color: rgb(242, 14, 14);
+        }
+        /* 状态四: 被点击的链接 */
+        a:active {
+            text-decoration: none;
+            color: rgb(59, 43, 43);
+        }
+    </style>
+    
+    <div class="content-section">
+        <form method="GET" action="result">
+            <fieldset class="form-group border-bottom">
+                <legend class="border-bottom mb-4">搜索结果</legend>
+                <div class="container mb-2">
+                    
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="form-group">
+                                <input class="form-control form-control-lg" name="keyword" placeholder="搜索", value={{request.args.get('keyword')['contents']}}>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <input class="btn btn-lg btn-outline-primary btn-block" type="submit" value="Search">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row form-inline">
+                        <div class="col-sm-3">
+                            <div class="form-group custom-control-inline">
+                                <div class="col-sm-2">
+                                <label class="col-lg-2 col-form-label" for="limit">Limit</label>
+                                    </div>
+                                        <div class="col-sm-1">
+                                <input class="form-control " id="limit" name="limit" type="text", value = {{request.args.get('limit')}}>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-select">
+                                <select class="form-control " id="sportType" name="sportType">
+                                    {%if request.args.get('sportType') == '足球'%}
+                                        <option value="无限制">无限制</option>
+                                        <option selected value="足球">足球</option>
+                                        <option value="羽毛球">羽毛球</option>
+                                    {%elif request.args.get('sportType') == '羽毛球'%}
+                                        <option value="无限制">无限制</option>
+                                        <option value="足球">足球</option>
+                                        <option selected value="羽毛球">羽毛球</option>
+                                    {%else%}
+                                        <option selected value="无限制">无限制</option>
+                                        <option value="足球">足球</option>
+                                        <option value="羽毛球">羽毛球</option>
+                                    {%endif%}
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-select">
+                                <select class="form-control" id="mode" name="mode"><option value="a">Aggregation</option><option selected value="b">BM25</option><option value="f">Fuzzy</option></select>
+                                
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input checked class=" form-check form-check-input" id="efficient" name="efficient" type="checkbox" value="y">
+                                <label class="form-check-label" for="efficient">Efficient</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </fieldset>
+
+        </form>
+    </div>
+    
+        <div class="container">
+            <h5>{{ length }} results for {{ keyword.split('sport')[0] }} limited to type {{request.args.get('sportType')}}</h5>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Top</th>
+                    <th>Result</th>
+                    <th>Information</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(1, 21) %}
+                    {% if (20*(page_num-1)+i) < length %}
+                    <tr>
+                    <td>{{20*(page_num-1)+i}}</td>
+                        <td>
+                                <a href="{{list_result[20*(page_num-1)+i]['url']}}" target="_blank">{{''.join(list_result[20*(page_num-1)+i]['title'].split(' '))}} </a>
+                                <br>
+                                <br>
+                                {{''.join(list_result[20*(page_num-1)+i]['highlight'].split(' '))|safe}}
+                                <br>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="col">
+                <ul class="pagination">
+                    <!-- <li class="page-item"><a href="#" class="page-link">上一页</a></li> -->
+                    {% if page_num > 1 %}
+                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num=page_num-1, limit=request.args.get('limit'), sportType=request.args.get('sportType'))}}" class="page-link"><span>&laquo;</span></a></li>
+                    {% endif %}
+                    {% for i in range((length // 20) + 1) %}
+                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num = i+1, limit=request.args.get('limit'), sportType=request.args.get('sportType'))}}" class="page-link">{{ i+1 }}</a></li>
+                    {% endfor %}
+                    {% if 20 * page_num < length %}
+                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num = page_num+1, limit=request.args.get('limit'), sportType=request.args.get('sportType'))}}" class="page-link"><span>&raquo;</span></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    
+</div>
+
+<br/>
+<br/>
+<br/>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
+
+</body>
+</html>

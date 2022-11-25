@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>百度一下，你就知道</title>
+		<link rel="stylesheet" href="static/css/style.css" />
+		<script src="static/js/canvas.js"></script>
+		<script src="static/js/script.js"></script>
+		<script id="baidu_script"></script>
+	</head>
+
+	<body>
+		<header id="baidu_header">
+			<div id="header_left">
+				<ul>
+					<li id="show_date"></li>
+					<li id="show_week"></li>
+					<li id="show_time"></li>
+				</ul>
+			</div>
+			<!--<br /><br />-->
+		</header>
+		<div id="baidu_searcher">
+			<img id="baidu_logo" src="static/pic/baidu_logo.png" alt="体育新闻搜索引擎" />
+			<div id="search_area">
+				<form id="baidu_form" action="result" method="get" target="_blank">
+                    <!-- <input id="baidu_hidden" type="hidden" name="ie" value="UTF-8"> -->
+					<input id="baidu_text" type="text" autofocus="autofocus" name="keyword" value="" autocomplete="off" class="text"/>
+					<input id="baidu_submit" type="submit" value="搜索" />
+				</form>
+			</div>
+		</div>
+
+	</body>
+
+</html>
