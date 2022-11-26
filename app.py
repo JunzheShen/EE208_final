@@ -7,6 +7,7 @@ import jieba
 import lucene
 import numpy as np
 from flask import Flask, jsonify, redirect, render_template, request, url_for
+import recommend
 from java.io import File
 from java.nio.file import Path
 from org.apache.lucene.analysis.core import WhitespaceAnalyzer
@@ -137,9 +138,9 @@ def showres():
     searcher = IndexSearcher(DirectoryReader.open(directory))
     analyzer = WhitespaceAnalyzer()
     search_res = run(searcher, analyzer, kw, limit)
-    print(len(search_res))
+    related_kw = recommend.getKey(search_res, kw)
     # del searcher
-    return render_template("result_page.html", list_result = search_res, keyword = kw, page_num = int(page_num), length = len(search_res))
+    return render_template("result_page.html", list_result = search_res, keyword = kw, page_num = int(page_num), length = len(search_res), recommend_lst = related_kw)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8081)
