@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-sm-10">
                             <div class="form-group">
-                                <input class="form-control form-control-lg" name="keyword" placeholder="搜索", value={{request.args.get('keyword')['contents']}}>
+                                <input class="form-control form-control-lg" name="keyword" placeholder="搜索", value={{request.args.get('keyword')}}>
                             </div>
                         </div>
                         <div class="col-sm">
@@ -62,7 +62,11 @@
                                 <label class="col-lg-2 col-form-label" for="limit">Limit</label>
                                     </div>
                                         <div class="col-sm-1">
-                                <input class="form-control " id="limit" name="limit" type="text", value = {{request.args.get('limit')}}>
+                                {%if request.args.get('limit') == None%}
+                                    <input class="form-control " id="limit" name="limit" type="text", value = {{50}}>
+                                {%else%}
+                                    <input class="form-control " id="limit" name="limit" type="text", value = {{request.args.get('limit')}}>
+                                {%endif%}
                                 </div>
                             </div>
                         </div>
@@ -72,14 +76,58 @@
                                     {%if request.args.get('sportType') == '足球'%}
                                         <option value="无限制">无限制</option>
                                         <option selected value="足球">足球</option>
+                                        <option value="篮球">篮球</option>
+                                        <option value="排球">排球</option>
+                                        <option value="乒乓球">乒乓球</option>
+                                        <option value="台球">台球</option>
                                         <option value="羽毛球">羽毛球</option>
                                     {%elif request.args.get('sportType') == '羽毛球'%}
                                         <option value="无限制">无限制</option>
                                         <option value="足球">足球</option>
+                                        <option value="篮球">篮球</option>
+                                        <option value="排球">排球</option>
+                                        <option value="乒乓球">乒乓球</option>
+                                        <option value="台球">台球</option>
                                         <option selected value="羽毛球">羽毛球</option>
+                                    {%elif request.args.get('sportType') == '篮球'%}
+                                        <option value="无限制">无限制</option>
+                                        <option value="足球">足球</option>
+                                        <option selected value="篮球">篮球</option>
+                                        <option value="排球">排球</option>
+                                        <option value="乒乓球">乒乓球</option>
+                                        <option value="台球">台球</option>
+                                        <option value="羽毛球">羽毛球</option>
+                                    {%elif request.args.get('sportType') == '排球'%}
+                                        <option value="无限制">无限制</option>
+                                        <option value="足球">足球</option>
+                                        <option value="篮球">篮球</option>
+                                        <option selected value="排球">排球</option>
+                                        <option value="乒乓球">乒乓球</option>
+                                        <option value="台球">台球</option>
+                                        <option value="羽毛球">羽毛球</option>
+                                    {%elif request.args.get('sportType') == '乒乓球'%}
+                                        <option value="无限制">无限制</option>
+                                        <option value="足球">足球</option>
+                                        <option value="篮球">篮球</option>
+                                        <option value="排球">排球</option>
+                                        <option selected value="乒乓球">乒乓球</option>
+                                        <option value="台球">台球</option>
+                                        <option value="羽毛球">羽毛球</option>
+                                    {%elif request.args.get('sportType') == '台球'%}
+                                        <option value="无限制">无限制</option>
+                                        <option value="足球">足球</option>
+                                        <option value="篮球">篮球</option>
+                                        <option value="排球">排球</option>
+                                        <option value="乒乓球">乒乓球</option>
+                                        <option selected value="台球">台球</option>
+                                        <option value="羽毛球">羽毛球</option>
                                     {%else%}
                                         <option selected value="无限制">无限制</option>
                                         <option value="足球">足球</option>
+                                        <option value="篮球">篮球</option>
+                                        <option value="排球">排球</option>
+                                        <option value="乒乓球">乒乓球</option>
+                                        <option value="台球">台球</option>
                                         <option value="羽毛球">羽毛球</option>
                                     {%endif%}
                                 </select>
