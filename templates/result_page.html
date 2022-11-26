@@ -158,6 +158,17 @@
         <div class="container">
             <h5>{{ length }} results for {{ keyword.split('sport')[0] }} limited to type {{request.args.get('sportType')}}</h5>
         </div>
+        <br>
+        <div class="container">
+            <div class="row">
+            <div class="col-md-4"><h5>You might also be interest in </h5></div>
+            <div class="col-md-3">
+                {%for i in recommend_lst%}
+                <a href="{{url_for('showres', keyword=i)}}">{{i}}</a>
+                {%endfor%}
+            </div>
+            </div>
+        </div>
 
         <div class="table-responsive">
             <table class="table table-hover">
