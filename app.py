@@ -139,8 +139,6 @@ def showres():
     analyzer = WhitespaceAnalyzer()
     search_res = run(searcher, analyzer, kw, limit)
     related_kw = recommend.getKey(search_res, kw)
-    print(related_kw)
-    print(len(search_res))
     # del searcher
     return render_template("result_page.html", list_result = search_res, keyword = kw, page_num = int(page_num), length = len(search_res), recommend_lst = related_kw)
 
