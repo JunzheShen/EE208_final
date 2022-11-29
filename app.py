@@ -140,6 +140,14 @@ def showres():
     search_res = run(searcher, analyzer, kw, limit)
     related_kw = recommend.getKey(search_res, kw)
     # del searcher
+    # sort_by_time = 0 : 按相关度降序 1 : 按时间降序 2 : 按时间升序
+    mode = request.args.get('mode')
+    if mode == "0" or mode is None:
+        pass
+    elif mode == "1":
+        search_res.sort(key = lambda x : x['time'], reverse = True)
+    else:
+        search_res.sort(key = lambda x : x['time']) # 默认由大到小
     return render_template("result_page.html", list_result = search_res, keyword = kw, page_num = int(page_num), length = len(search_res), recommend_lst = related_kw)
 
 if __name__ == '__main__':

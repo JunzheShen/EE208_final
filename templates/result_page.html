@@ -136,7 +136,21 @@
                         </div>
                         <div class="col-auto">
                             <div class="form-select">
-                                <select class="form-control" id="mode" name="mode"><option value="a">Aggregation</option><option selected value="b">BM25</option><option value="f">Fuzzy</option></select>
+                                <select class="form-control" id="mode" name="mode">
+                                    {%if request.args.get('mode') == "0" or request.args.get('mode') == None%}
+                                    <option selected value="0">按相关度降序</option>
+                                    <option value="1">按时间降序</option>
+                                    <option value="2">按时间升序</option>
+                                    {%elif request.args.get('mode') == "1"%}
+                                    <option value="0">按相关度降序</option>
+                                    <option selected value="1">按时间降序</option>
+                                    <option value="2">按时间升序</option>
+                                    {%elif request.args.get('mode') == "2"%}
+                                    <option value="0">按相关度降序</option>
+                                    <option value="1">按时间降序</option>
+                                    <option selected value="2">按时间升序</option>
+                                    {%endif%}
+                                </select>
                                 
                             </div>
                         </div>
@@ -162,21 +176,21 @@
         <div class="container">
             <div class="row">
             <div class="col-md-4"><h5>You might also be interest in </h5></div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 {%for i in recommend_lst%}
-                <a href="{{url_for('showres', keyword=i)}}">{{i}}</a>
+                <a class="btn btn-primary" href="{{url_for('showres', keyword=i)}}">{{i}}</a>
                 {%endfor%}
             </div>
             </div>
         </div>
-
+        <br>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                 <tr>
                     <th>Top</th>
                     <th>Result</th>
-                    <th>Information</th>
+                    <th>Time</th>
 
                 </tr>
                 </thead>
@@ -192,6 +206,8 @@
                                 {{''.join(list_result[20*(page_num-1)+i]['highlight'].split(' '))|safe}}
                                 <br>
                         </td>
+                    {%set time_str = list_result[20*(page_num-1)+i]['time']|string%}
+                    <td>{{time_str[:4] + '年' + time_str[4:6] + '月' + time_str[6:8] + '日'}}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -201,13 +217,13 @@
                 <ul class="pagination">
                     <!-- <li class="page-item"><a href="#" class="page-link">上一页</a></li> -->
                     {% if page_num > 1 %}
-                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num=page_num-1, limit=request.args.get('limit'), sportType=request.args.get('sportType'))}}" class="page-link"><span>&laquo;</span></a></li>
+                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num=page_num-1, limit=request.args.get('limit'), sportType=request.args.get('sportType'), mode=request.args.get('mode'))}}" class="page-link"><span>&laquo;</span></a></li>
                     {% endif %}
                     {% for i in range((length // 20) + 1) %}
-                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num = i+1, limit=request.args.get('limit'), sportType=request.args.get('sportType'))}}" class="page-link">{{ i+1 }}</a></li>
+                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num = i+1, limit=request.args.get('limit'), sportType=request.args.get('sportType'), mode=request.args.get('mode'))}}" class="page-link">{{ i+1 }}</a></li>
                     {% endfor %}
                     {% if 20 * page_num < length %}
-                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num = page_num+1, limit=request.args.get('limit'), sportType=request.args.get('sportType'))}}" class="page-link"><span>&raquo;</span></a></li>
+                        <li class="page-item"><a href="{{url_for('showres', keyword=keyword, page_num = page_num+1, limit=request.args.get('limit'), sportType=request.args.get('sportType'), mode=request.args.get('mode'))}}" class="page-link"><span>&raquo;</span></a></li>
                     {% endif %}
                 </ul>
             </div>
