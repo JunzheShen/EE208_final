@@ -2,7 +2,7 @@
 
 import os
 import sys
-
+import SearchImg
 import jieba
 import lucene
 import numpy as np
@@ -11,6 +11,7 @@ import recommend
 from java.io import File
 from java.nio.file import Path
 from org.apache.lucene.analysis.core import WhitespaceAnalyzer
+from org.apache.lucene.analysis.cjk import CJKAnalyzer
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.lucene.index import DirectoryReader
 from org.apache.lucene.queryparser.classic import QueryParser
@@ -28,23 +29,7 @@ from org.apache.pylucene.search.similarities import (PythonClassicSimilarity,
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False
 
-""" def parseCommand(command):
-    '''
-    input: C title:T site:S
-    output: {'contents':C, 'sport':S, 'site':U}
-    '''
-    allowed_opt = ['sport', 'site']
-    command_dict = {}
-    opt = 'contents'
-    for i in command.split(' '):
-        if ':' in i:
-            opt, value = i.split(':')[:2]
-            opt = opt.lower()
-            if opt in allowed_opt and value != '':
-                command_dict[opt] = command_dict.get(opt, '') + ' ' + value
-        else:
-            command_dict[opt] = command_dict.get(opt, '') + ' ' + i
-    return command_dict """
+
 def parseCommand(command):
     '''
     input: C title:T site:S
@@ -149,6 +134,33 @@ def showres():
     else:
         search_res.sort(key = lambda x : x['time']) # 默认由大到小
     return render_template("result_page.html", list_result = search_res, keyword = kw, page_num = int(page_num), length = len(search_res), recommend_lst = related_kw)
+
+@app.route('/result_img', methods=['GET'])
+def showres_img():
+    limit = request.args.get('limit')
+    if not limit:
+        limit = 50
+    else:
+        limit = int(limit)
+    try:
+        page_num = request.args.get('page_num')
+    except:
+        page_num = 1
+    if not page_num:
+        page_num = 1
+    keyword = request.args.get('keyword')
+    STORE_DIR = "index_img_by_kw"
+    try:
+        vm=lucene.initVM(vmargs=['-Djava.awt.headless=true'])
+    except:
+        vm=lucene.getVMEnv()
+    vm.attachCurrentThread()
+    directory = SimpleFSDirectory(File(STORE_DIR).toPath())
+    searcher = IndexSearcher(DirectoryReader.open(directory))
+    analyzer = CJKAnalyzer()
+    img_res=SearchImg.run(searcher, analyzer,keyword,limit)
+    del searcher
+    return render_template("result_img.html", keyword=keyword,img_res=img_res,length=len(img_res),page_num=int(page_num))
 
 if __name__ == '__main__':
     app.run(debug=True, port=8081)
