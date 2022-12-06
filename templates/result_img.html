@@ -59,19 +59,18 @@
                         <div class="col-sm-3">
                             <div class="form-group custom-control-inline">
                                 <div class="col-sm-2">
-                                <label class="col-lg-2 col-form-label" for="limit">Limit</label>
-                                    </div>
-                                        <div class="col-sm-1">
-                                {%if request.args.get('limit') == None%}
-                                    <input class="form-control " id="limit" name="limit" type="text", value = {{50}}>
-                                {%else%}
-                                    <input class="form-control " id="limit" name="limit" type="text", value = {{request.args.get('limit')}}>
-                                {%endif%}
+                                    <label class="col-lg-2 col-form-label" for="limit">Limit</label>
+                                </div>
+                                <div class="col-sm-1">
+                                    {%if request.args.get('limit') == None%}
+                                        <input class="form-control " id="limit" name="limit" type="text", value = {{50}}>
+                                    {%else%}
+                                        <input class="form-control " id="limit" name="limit" type="text", value = {{request.args.get('limit')}}>
+                                    {%endif%}
                                 </div>
                             </div>
                         </div>
-
-
+                        <a class="btn btn-primary col-lg-2" href="{{url_for('showres', keyword=request.args.get('keyword'))}}">搜文字</a>
                     </div>
                 </div>
 

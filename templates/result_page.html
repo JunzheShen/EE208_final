@@ -51,7 +51,6 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <input class="btn btn-lg btn-outline-primary btn-block" type="submit" value="Search">
-                                <a class="btn btn-primary" href="{{url_for('showres_img', keyword=request.args.get('keyword'))}}">搜图</a>
                             </div>
                         </div>
                     </div>
@@ -155,12 +154,7 @@
                                 
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <div class="form-check">
-                                <input checked class=" form-check form-check-input" id="efficient" name="efficient" type="checkbox" value="y">
-                                <label class="form-check-label" for="efficient">Efficient</label>
-                            </div>
-                        </div>
+                        <a class="btn btn-primary col-lg-2" href="{{url_for('showres_img', keyword=request.args.get('keyword'))}}">搜图</a>
                     </div>
                 </div>
 
@@ -179,7 +173,7 @@
             <div class="col-md-4"><h5>You might also be interest in </h5></div>
             <div class="col-md-6">
                 {%for i in recommend_lst%}
-                <a class="btn btn-primary" href="{{url_for('showres', keyword=i)}}">{{i}}</a>
+                <a class="btn btn-info" href="{{url_for('showres', keyword=i)}}">{{i}}</a>
                 {%endfor%}
             </div>
             </div>
