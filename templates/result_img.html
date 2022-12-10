@@ -10,6 +10,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/css/bootstrap-multiselect.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/result_img.css">
 </head>
 
 <body>
@@ -56,12 +57,12 @@
                     </div>
 
                     <div class="row form-inline">
-                        <div class="col-sm-3">
+                        <div class="col-md-4">
                             <div class="form-group custom-control-inline">
-                                <div class="col-sm-2">
-                                    <label class="col-lg-2 col-form-label" for="limit">Limit</label>
+                                <div class="col-md-2">
+                                    <label class="col-md-3 col-form-label" for="limit">Limit</label>
                                 </div>
-                                <div class="col-sm-1">
+                                <div class="col-md-2">
                                     {%if request.args.get('limit') == None%}
                                         <input class="form-control " id="limit" name="limit" type="text", value = {{50}}>
                                     {%else%}
@@ -70,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a class="btn btn-primary col-lg-2" href="{{url_for('showres', keyword=request.args.get('keyword'))}}">搜文字</a>
+                        <a class="btn btn-primary col-md-2" href="{{url_for('showres', keyword=request.args.get('keyword'))}}">搜文字</a>
                     </div>
                 </div>
 
@@ -83,9 +84,27 @@
         <div class="container">
             <h5>{{ length }} results for {{ keyword.split('sport')[0] }}</h5>
         </div>
+        <div class="container">
+            {%for i in range(20)%}
+            {% if (20*(page_num-1)+i) < length %}
+            {%set dic = img_res[20*(page_num-1)+i]%}
+            {% for src in dic['img'] %}
+            <div class="bg-items">
+                <div class="items" style="background-image : url({{src}}); -moz-background-size:100% 100%; background-size:100% 100%;">
+                    <div class="details">
+                        <h3>#{{20*(page_num-1)+i+1}}</h3>
+                        <!-- <p>this is a description for your photo in your gallery.</p> -->
+                        <a href={{dic['url']}} target="_blank">{{dic['title']}}</a>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+            {%endif%}
+            {%endfor%}
+        </div>
         <br>
 
-        <br>
+        <!-- <br>
         <div class="row row-cols-3">
             {%for i in range(20)%}
             {% if (20*(page_num-1)+i) < length %}
@@ -98,7 +117,7 @@
                 {%endfor%}
             {%endif%}
             {%endfor%}
-        </div>
+        </div> -->
         
         
         <div class="col">
